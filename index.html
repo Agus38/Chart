@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identifikasi Candlestick</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            max-width: 400px;
+            margin: auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        p {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Identifikasi Candlestick</h1>
+    <form id="candlestickForm" enctype="multipart/form-data">
+        <label for="image">Unggah Gambar Candlestick:</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+
+        <button type="button" onclick="uploadImage()">Identifikasi</button>
+    </form>
+
+    <p id="identificationResult"></p>
+
+    <script>
+        function uploadImage() {
+            var formData = new FormData();
+            var fileInput = document.getElementById('image');
+            
+            if (fileInput.files.length > 0) {
+                formData.append('image', fileInput.files[0]);
+
+                fetch('/identify_candlestick', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var identificationResultElement = document.getElementById("identificationResult");
+                    identificationResultElement.innerText = "Hasil Identifikasi: " + data.result;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            } else {
+                alert('Pilih gambar terlebih dahulu.');
+            }
+        }
+    </script>
+</body>
+</html>
